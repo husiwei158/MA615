@@ -1,0 +1,47 @@
+---
+title: "MA615 Assignment 1"
+author: "Siwei Hu"
+date: "September 15, 2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+Question:
+
+A sloppy printer produces books with an average of 2 misprints per page. You want to know how many pages
+in a 50 page book will have more than k misprints. Make an n x k table that shows the probability that n or fewer pages in a 50 page book will have more than k misprints.
+
+Idea:
+
+The quesiton asked us about the probility that n or fewer pages in a 50 page book will have more than k misprints. So we first use poission distribution with $\lambda$ = 2 to calculate the probability that each page have more than K misprints. The PDF of poission distribution is $P(x= k)=e^{-\lambda}*\frac{\lambda^k}{k!}$, so $$P(x> k)= 1- P(x\le k) = 1- \sum_{i=0}^{k}e^{-\lambda}*\frac{\lambda^k}{k!}$$
+
+Then we got probabilities that k = 1:6 misprints each page and then we want to calculate probability that n or fewer page in a 50 page book will have more than k misprints. Since these pages are either bad pages or good pages, so we use binomial distribution to calculate these probabilities. The pdf of binomial is $P(x\leq n) = \binom{n}{k}*p^k*q^{n-k}$
+We build a table as data frame and put all these probability into table
+```{r}
+library(knitr)
+library(kableExtra)
+# I set there are K misprint in each page of book 
+k <- c(1:6)
+
+# use possion distribution with lamda = 2 to calculate the probability when misprint >= k in each page
+
+misprint.k <- ppois(k,2,lower.tail = FALSE)
+misprint.k
+# build a table with size 50*6 and give these row and colume names to help understand
+table <- as.data.frame(matrix(nrow= 50, ncol = 6,dimnames = list(c(1:50),c(1:6))))
+
+#use a for loop and binomial distribution to calcaulate the probabilities that misprint >= k and page <=n in each in 50 rows 
+for(n in 1:50){
+  table[n,] <- pbinom(n,50, misprint.k,lower.tail = TRUE)
+}                             
+#Use Kable to set the whole table like adjusting probilities digits and showing row name or not.
+table.1 = kable(x = table, digits = 10,row.names = TRUE,"html")
+kable_styling(kable_input = table.1,bootstrap_options = "striped",font_size = 14)
+ 
+```
+
+```{r pressure, echo=FALSE, fig.cap="A caption", out.width = '100%'}
+knitr:::include_graphics("r.png")
+```
+
+
