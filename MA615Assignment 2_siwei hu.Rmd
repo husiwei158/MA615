@@ -1,0 +1,112 @@
+---
+title: "MA615_Assignment2"
+author: "Siwei Hu"
+date: "September 22, 2018"
+output: pdf_document
+---
+
+```{r}
+library(tidyverse)
+
+```
+```{r}
+ggplot(data = mpg) + geom_point(mapping = aes(x = displ , y = hwy), position = "jitter")   + facet_grid(drv~cyl)
+```
+The empty cell help the plot of linear regression between displ and hwy to be categorized with two different variables drv and cyl. Both variables are binary. So the plot changes to 12 different pieces with 12 different situations. In each piece, they will do linear regression between displ and hwy again.
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = drv, y = cyl), position = "jitter")
+```
+
+This plot categorized all car and we can see they are in 12 different suitation. This is same as the previous graph. The differences between them are that previous grahp did linear regression between displ and hwy in each piece. The number of points in each piece is same.
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(drv ~ .)
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(. ~ cyl)
+
+```
+
+The first graph divide data into three rows of graph that use variable "drv". So there are three rows and it does linear regression between displ and hwy in each row.
+
+The Second graph divide data into four columns of graph that use variable "cyl". So there are four columns and it does linear regression between displ and hwy in each column.
+
+The . means if you dont want to do facet in row or column, it can instead ofthat variable name.
+
+```{r}
+ggplot(data = mpg)+
+  geom_line(mapping = aes(x = displ,y = hwy))
+
+ggplot(data = mpg)+
+  geom_boxplot(mapping = aes(x = displ,y = hwy,group = drv))
+
+ggplot(data = mpg)+
+  geom_histogram(mapping = aes(x = hwy,fill = drv),binwidth = 1)
+ggplot(data = mpg)+
+  geom_area(mapping = aes(x = cyl,y = drv))
+
+
+```
+
+```{r}
+library(nycflights13)
+nycflights13::flights
+```
+
+```{r}
+filter(flights, arr_delay >= 2)
+
+filter(flights, dest %in% c('IAH', 'HOU') )
+
+filter(flights, carrier %in% c('UA','AA','DL'))
+
+filter(flights, month %in% c(7,8,9))
+
+filter(flights, arr_delay >= 2 & dep_delay == 0 )
+
+filter(flights, dep_delay >=1 & dep_time - sched_dep_time >= 30 )
+
+filter(flights, dep_time >= 0 & dep_time <= 600)
+```
+
+```{r}
+filter(flights, between(dep_time,0,600))
+```
+Between(x, left, right) 
+This help me easier to set a range of time in preivous quesiton.
+
+```{r}
+miss.dep <- sum(length(which(is.na(flights$dep_time))))
+miss.dep
+
+filter(flights, is.na(dep_time))
+```
+
+If there is no depature time, there are no arr_time. It means the flights were canceded.
+
+NA^0, NA|TRUE and FALSE&NA are be 
+
+
+
+```{r}
+data("LakeHuron")
+LakeHuron <- data.frame("year" = 1875:1972, "level" = LakeHuron)
+```
+
+```{r}
+ggplot(data = LakeHuron)+
+  geom_point(mapping = aes(x = year,y = level))
+
+ggplot(data = LakeHuron)+
+  geom_smooth(mapping = aes(x = year,y = level))
+
+ggplot(data = LakeHuron)+
+  geom_point(mapping = aes(x = year,y = level))+
+  geom_smooth(mapping = aes(x= year, y= level),se = FALSE)
+
+```
