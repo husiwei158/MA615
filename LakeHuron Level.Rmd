@@ -1,0 +1,47 @@
+---
+title: "LakeHuron level"
+author: "Siwei Hu"
+date: "September 24, 2018"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+inputPanel(
+
+checkboxInput("smooth",label="add smoother",value = FALSE)
+)
+
+renderPlot(
+ if (smooth){
+ggplot(data = LakeHuron)+
+  geom_point(mapping = aes(x = year,y = level))+
+  geom_smooth(mapping = aes(x= year, y= level),se = FALSE)
+} else 
+{ggplot(data = LakeHuron)+
+  geom_point(mapping = aes(x = year,y = level))}
+
+)
+```
+## Embedded Application
+
+
+
+```{r tabsets, echo=FALSE}
+shinyAppDir(
+  system.file("examples/06_tabsets", package = "shiny"),
+  options = list(
+    width = "100%", height = 550
+  )
+)
+```
+
+
+
+
+
